@@ -1,4 +1,4 @@
-Attribute VB_Name = "Module1"
+Attribute VB_Name = "Module2"
 Sub StockMarket():
 
 'Steps:
@@ -19,22 +19,17 @@ Sub StockMarket():
 'Add an additional summary table that identifies the greatest % increase, % decrease and greatest total volume
 
 
-    'Part 1
+    'Part I -
     '--------
            
-    'Loop through all the stocks for one year
-    'Add each different ticker symbol to the summary table
-    'Add Yearly change for the stock to the summary table
-    'Add Percent change for the stock to the summary table
-    'Add Total stock volume to the summary table
-    
-        
     'Create variables and set counts to 0
     Dim Ticker As String
     Dim YearlyChange As Double
+    Dim PercentChange As Double
     Dim StockVolume As Double
     
     YearlyChange = 0
+    PercentChange = 0
     StockVolume = 0
     
     'Determine number of the last row and last column
@@ -50,20 +45,59 @@ Sub StockMarket():
     Cells(1, 12).Value = "Total Stock Volume"
     
     'test "lasts"
-    MsgBox (LastRow)
-    MsgBox (LastColumn)
+    'MsgBox (LastRow)
+    'MsgBox (LastColumn)
 
-    'need a way to calc the YearlyChange
+    'Id the open value for the first stock ticker, for calc of YearlyChange
     Dim OpenValue As Double
     OpenValue = Cells(2, 3).Value
     
     MsgBox (OpenValue)
     
-    'Loop creation - will need to loop through each worksheet
+    'Still to add, loop through each worksheet to create a summary table
     
-    'Declare variables and create a for loop
-                
-    'In column 1 look for changes in value when moving to next ticker symbol
-    'If statement to identify what happens at the change in value for column 1
+    'Declare variables and create the for loop
+    'Dim i As String
+    For i = 2 To LastRow
+                        
+        'In column 1 look for changes in value when moving to next ticker symbol
+        'If statement to identify what happens at the change in value for column 1
+        If Cells(i, 1).Value <> Cells(i + 1, 1).Value Then
     
+            'Add each different ticker symbol to the summary table during the loop
+            Ticker = Cells(i, 1).Value
+            Range("I" & Summary_Table_Row).Value = Ticker
+            
+            'Add Total stock volume to the summary table
+            StockVolume = StockVolume + Cells(i, 7).Value
+            Range("L" & Summary_Table_Row).Value = StockVolume
+            
+            'Add Yearly change for the stock to the summary table
+            YearlyChange = Cells(i, 6).Value - OpenValue
+            Range("J" & Summary_Table_Row).Value = YearlyChange
+    
+            'MsgBox (YearlyChange)
+            
+            'Add Percent change for the stock to the summary table
+                   
+            'Move down to next row of summary table for next loop
+            Summary_Table_Row = Summary_Table_Row + 1
+            
+            'Reset the counter for StockVolume
+            StockVolume = 0
+            YearlyChange = 0
+            'PercentChange = 0
+                    
+            'identify the next OpenValue
+            OpenValue = Cells((i + 1), 3).Value
+            'MsgBox (OpenValue)
+                        
+        Else
+        
+            StockVolume = StockVolume + Cells(i, 7).Value
+                                      
+        End If
+        
+    Next i
 End Sub
+
